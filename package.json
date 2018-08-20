@@ -23,6 +23,7 @@
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
     "jsonbin-io-api": "^2.1.0",
+    "python-shell": "^5.0.0",
     "sqlite3": "^5.1.4",
     "xmlhttprequest": "^1.8.0"
   },

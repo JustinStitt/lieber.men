@@ -8,14 +8,18 @@ aaron_button.addEventListener("click", async () => {
   not_logged.style.visibility = "hidden";
   const pass = prompt("Enter password");
   let message = JSON.stringify({ pass: pass });
-  console.log("message: ", message);
   const response = await fetch("/api/yoink", {
     method: "POST",
     body: message,
     headers: {
       "Content-Type": "application/json",
     },
-  });
-  const body = await response.json();
-  console.log("body: ", body);
+  })
+    .then((resp) => resp.json())
+    .then((json) => {
+      console.log("json: ", json);
+      setTimeout(() => {
+        window.location.replace("https://aaron.lieber.men/leaderboard");
+      }, 1500);
+    });
 });
