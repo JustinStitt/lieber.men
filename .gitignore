@@ -1,6 +1,7 @@
 # Built JS files
 build/*
 
+.vscode/
 # Logs
 logs
 *.log

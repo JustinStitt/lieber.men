@@ -1,12 +1,13 @@
-const express = require('express');
-const path = require('path');
+import http from 'http';
+import express from 'express';
+import path from 'path';
 import * as dotenv from 'dotenv';
 
 dotenv.config()
 
 const app = express();
-app.use(express.static('public'))
 
+app.use(express.static('public'))
 
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname + '/../public/phishing.html'));
@@ -47,6 +48,10 @@ app.get('/blog/:id', async (req, res) => {
 });
 
 
-app.listen(process.env.PORT || 3000)
+const httpServer = http.createServer(app);
+httpServer.listen(process.env.PORT, () => console.log(`Server is running on ${process.env.PORT}`));
 
-module.exports = app
+
+// app.listen(process.env.PORT || 3000);
+
+module.exports = app;
