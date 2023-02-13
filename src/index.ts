@@ -1,15 +1,12 @@
-import http from 'http';
-import express from 'express';
-import cookieParser from 'cookie-parser';
-import path from 'path';
+const express = require('express');
+const path = require('path');
 import * as dotenv from 'dotenv';
+
 dotenv.config()
 
 const app = express();
+app.use(express.static('public'))
 
-app.use(express.urlencoded({ extended: false }));
-app.use(express.json());
-app.use(cookieParser())
 
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname + '/../public/phishing.html'));
@@ -17,6 +14,10 @@ app.get('/', (req, res) => {
 
 app.get('/leaderboard', (req, res) => {
   res.sendFile(path.join(__dirname + '/../public/leaderboard.html'));
+});
+
+app.get('/phishing', (req, res) => {
+  res.sendFile(path.join(__dirname + '/../public/phishing.html'));
 });
 
 app.get('/api/leaderboard', async (req, res) => {
@@ -45,9 +46,7 @@ app.get('/blog/:id', async (req, res) => {
   res.sendFile(path.join(__dirname + `/../public/blog/${req.params.id}.html`));
 });
 
-app.use(express.static('public'))
 
-const httpServer = http.createServer(app);
-httpServer.listen(process.env.PORT, () => console.log(`Server is running on ${process.env.PORT}`));
+app.listen(process.env.PORT || 3000)
 
 module.exports = app
