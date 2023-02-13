@@ -1,5 +1,11 @@
+let logged = document.getElementById("logged");
+let not_logged = document.getElementById("not-logged");
+logged.style.visibility = "hidden";
+
 let aaron_button = document.getElementById("aaron-button");
 aaron_button.addEventListener("click", async () => {
+  logged.style.visibility = "visible";
+  not_logged.style.visibility = "hidden";
   const pass = prompt("Enter password");
   let message = JSON.stringify({ pass: pass });
   console.log("message: ", message);
