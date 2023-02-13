@@ -59,3 +59,5 @@ app.use(express.static('public'))
 
 const httpServer = http.createServer(app);
 httpServer.listen(process.env.PORT, () => console.log(`Server is running on ${process.env.PORT}`));
+
+module.exports = app
